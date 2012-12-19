@@ -31,34 +31,31 @@ function UdpSend(message,Host,port){
 io.sockets.on('connection', function (socket) {
     if(!clients[socket.id]){
     clients[socket.id] = socket; 
-	var address = socket.handshake.address;
-	var NewId = "NewCLient| |"+ address.address + "|" + socket.id;
+	
+	var NewId = "NewCLient||"+  socket.id;
 		UdpSend(NewId,V4Ip,V4PortReceive)
 	}	
 	socket.on('message', function (msg) { 
 	  // console.log(msg);
-		var message = "update|"+ msg +"|"+ address.address + "|" + socket.id;
+		var message = "update|"+ msg +"|"+ socket.id;
 		UdpSend(message,V4Ip,V4PortReceive)
 		
 	});
  
 	serverUdp.on("message", function (msg, rinfo) {
-		var smsg = msg.toString('ascii', 0, rinfo.size);
-		//console.log(smsg);
-		var amsg = smsg.split(";");
-		var length = amsg.length;
+		var jmsg = JSON.parse(msg.toString('ascii', 0, rinfo.size));
 		
-		for (var i = 0; i < length; i++) {
-			var datmsg = amsg[i].split("|");
-			if (clients[datmsg[3]]) {
+		//console.log(jmsg.value);
+			
+			if (jmsg.id=="broadcast") {
 				
-				clients[datmsg[3]].emit("vvvv",amsg[i]);
 				
-				} else if(datmsg[3]=="broadcast"){
-				
-				socket.emit("vvvv",amsg[i]);
+				socket.emit("vvvv",jmsg);
+				} else if(clients[jmsg.id]){
+				clients[jmsg.id].emit("vvvv",jmsg);
+			//{"type":"update","vtype":"slider","name":"slider1","value":"6","id":"broadcast"}
 				}
-			}
+			
 	
 	
 	});
@@ -66,7 +63,7 @@ io.sockets.on('connection', function (socket) {
 	  socket.on('disconnect', function () {
 	  
       var address = socket.handshake.address;
-	  var DiscoId = "ClientDisconected| |"+ address.address + "|" + socket.id;
+	  var DiscoId = "ClientDisconected||" + socket.id;
 		UdpSend(DiscoId,V4Ip,V4PortReceive) 
 		
 		delete clients[socket.id];

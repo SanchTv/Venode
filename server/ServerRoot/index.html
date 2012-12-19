@@ -33,42 +33,42 @@
 
                 
 			
-				var datmsg = msg.split("|");
+				
    
-				if(datmsg[0]=="update"){
+				if(msg.type=="update"){
 	
-					datmsg2 = datmsg[1].split(":");
+					//{"type":"update","vtype":"slider","name":"slider1","value":"6","id":"broadcast"}
 		
-					if(datmsg2[0]=="slider"){
+					if(msg.vtype=="slider"){
 					   
-					   var selected = $('input[data-vname*='+datmsg2[1]+']');
+					   var selected = $('input[data-vname*='+msg.name+']');
 					   selected.attr("data-state","1");
-					   selected.val(datmsg2[2]).slider("refresh");
+					   selected.val(msg.value).slider("refresh");
 					   selected.attr("data-state","0");
 					  // console.log();
 					   
 						
-					}else if(datmsg2[0]=="text"){
-				        var selected = $('input[data-vname*='+datmsg2[1]+']');
+					}else if(msg.vtype=="text"){
+				        var selected = $('input[data-vname*='+msg.name+']');
 					    selected.attr("data-state","1");
-						$('input[data-vname*='+datmsg2[1]+']').val(datmsg2[2]);
+						selected.val(msg.value);
                         selected.attr("data-state","0");
-					}else if(datmsg2[0]=="radio"){
+					}else if(msg.vtype=="radio"){
 					
-					 $('input[data-vname*='+datmsg2[1]+']').each(function(index) {
+					 $('input[data-vname*='+msg.name+']').each(function(index) {
 					        $(this).attr("data-state","1");
                             $(this).attr("checked",false).checkboxradio("refresh");
 							$(this).attr("data-state","0");
 							});
-					 
-						$('input[value*='+datmsg2[2]+']').attr("checked",true).checkboxradio("refresh");
-					}else if(datmsg2[0]=="switch"){
-					 var selected = $('input[data-vname*='+datmsg2[1]+']');
-					   selected.attr("data-state","1");
-					$('select[data-vname*='+datmsg2[1]+']').val(datmsg2[2]);
+					 		$('input[value*='+msg.value+']').attr("checked",true).checkboxradio("refresh");
+							
+					}else if(msg.vtype=="switch"){
+					 var selected = $('input[data-vname*='+msg.name+']');
+						selected.attr("data-state","1");
+						selected.val(msg.value);
 					
-					$('select[data-vname*='+datmsg2[1]+']').slider("refresh");
-					  selected.attr("data-state","0");
+						selected.slider("refresh");
+						selected.attr("data-state","0");
 					
 					}		
 				}
