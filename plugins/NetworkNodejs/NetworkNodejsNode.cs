@@ -27,6 +27,8 @@ namespace VVVV.Nodes
 		ISpread<bool> Fstop;
 		[Input("NodeApp",IsSingle = true, StringType = StringType.Filename)]
 		ISpread<string> FNodeApp;
+		[Input("argument",IsSingle = true)]
+		ISpread<string> Fargs;
 		[Input("ShowNowindow",IsSingle = true)]
 		ISpread<bool> FWin;
 		[Output("Output")]
@@ -63,7 +65,7 @@ namespace VVVV.Nodes
 			
 			
 			cmd.StartInfo.WorkingDirectory = path;
-			cmd.StartInfo.Arguments = "/C " +"node "+ filename;
+			cmd.StartInfo.Arguments = "/C " +"node "+ filename +" "+Fargs[0];
 				
 			try
 			{  

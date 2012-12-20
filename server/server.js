@@ -1,7 +1,7 @@
 var HttpPort = 8000;
 var V4PortReceive = 5000;
 var V4PortSend = 5001;
-var V4Ip = "localhost";
+var V4Ip = process.argv[2];
 var ServerFolder = './ServerRoot';
 var static = require('node-static');
 var dgram = require('dgram');
@@ -12,6 +12,9 @@ var httpServer = http.createServer(function(request, response) {
     request.addListener('end', function () {
         clientFiles.serve(request, response);
     });
+});
+process.argv.forEach(function (val, index, array) {
+  console.log(index + ': ' + val);
 });
 
 io = require('socket.io').listen(httpServer);
